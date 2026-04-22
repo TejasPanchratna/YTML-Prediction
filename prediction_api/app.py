@@ -5,8 +5,8 @@ import numpy as np
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-# --- 1. Define the input data structure (This stays the same) ---
-# We still accept normal, human-friendly numbers from the user.
+# --- 1. Define the input data structure ---
+
 class VideoFeatures(BaseModel):
     title: str
     description: str
@@ -33,7 +33,7 @@ except Exception as e:
     print(f"Error loading models: {e}")
     classifier, regressor, scaler = None, None, None
 
-# --- 4. Feature Engineering Function (UPDATED) ---
+# --- 4. Feature Engineering Function ---
 def process_input_data(input_features: VideoFeatures):
     data = input_features.dict()
     df = pd.DataFrame([data])
@@ -44,14 +44,13 @@ def process_input_data(input_features: VideoFeatures):
     df['description_length'] = df['description'].str.len()
     
     # --- Part B: Apply the Log Transformation ---
-    # We convert the raw counts into their log versions.
-    # We use np.log1p which calculates log(1 + x) to safely handle zeros.
+    # we convert the raw counts into their log versions.
+    # we use np.log1p which calculates log(1 + x) to safely handle zeros.
     df['log_subscriber_count'] = np.log1p(df['subscriber_count'])
     df['log_channel_view_count'] = np.log1p(df['channel_view_count'])
     df['log_channel_video_count'] = np.log1p(df['channel_video_count'])
 
-    # --- Part C: Define the final feature order to match the model ---
-    # This list must be in the exact same order as the one you used for training.
+    # --- Part C: Define the final feature order ---
     final_feature_order = [
         'category_id', 'duration_seconds', 'publish_hour',
         'publish_day_of_week', 'channel_age_days', 'title_length',
@@ -59,13 +58,12 @@ def process_input_data(input_features: VideoFeatures):
         'log_channel_view_count', 'log_channel_video_count'
     ]
     
-    # Select and reorder the columns
     df_final = df[final_feature_order]
     
     return df_final
 
-# --- 5. Prediction Endpoint (This stays the same) ---
-# It now uses the updated process_input_data function automatically.
+# --- 5. Prediction Endpoint ---
+
 @app.post("/predict")
 def predict(input_features: VideoFeatures):
     if not all([classifier, regressor, scaler]):
