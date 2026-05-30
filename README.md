@@ -19,20 +19,6 @@ Both **classification** and **regression** models were trained to predict perfor
 
 ---
 
-## Model Integration and Deployment
-
-This trained model is deployed as part of my portfolio website, available in the repository:  
-**[MyPortfolioWebsite](https://github.com/TejasPanchratna/MYWEBSITE.git)**
-
-That project integrates:
-- A **NestJS** backend  
-- A **React** frontend  
-- This **machine learning model**, served through an API for real-time predictions
-
-To maintain modularity, this repository also includes a **FastAPI** implementation for local testing and standalone use.
-
----
-
 ## Exploratory Data Analysis (EDA)
 
 Exploratory Data Analysis was conducted using Python libraries such as:
